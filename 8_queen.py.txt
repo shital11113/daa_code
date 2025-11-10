@@ -1,0 +1,54 @@
+N = 8
+
+def print_board(board):
+    for row in board:
+        print(" ".join(row))
+    print()
+
+def is_safe(board, row, col):
+    # Check this column on upper side
+    for i in range(row):
+        if board[i][col] == 'Q':
+            return False
+
+    # Check upper left diagonal
+    i, j = row, col
+    while i >= 0 and j >= 0:
+        if board[i][j] == 'Q':
+            return False
+        i -= 1
+        j -= 1
+
+    # Check upper right diagonal
+    i, j = row, col
+    while i >= 0 and j < N:
+        if board[i][j] == 'Q':
+            return False
+        i -= 1
+        j += 1
+
+    return True
+
+def solve_queens(board, row):
+    # If all queens are placed
+    if row == N:
+        print("Final 8-Queens Matrix:")
+        print_board(board)
+        return True
+
+    # Try placing queen in all columns one by one
+    for col in range(N):
+        if is_safe(board, row, col):
+            board[row][col] = 'Q'
+            if solve_queens(board, row + 1):
+                return True
+            board[row][col] = '.'  # backtrack
+
+    return False
+
+# Step 1: Initialize board with first queen placed
+board = [['.' for _ in range(N)] for _ in range(N)]
+board[0][0] = 'Q'  # First Queen placed
+
+# Step 2: Solve for remaining queens
+solve_queens(board, 1)
